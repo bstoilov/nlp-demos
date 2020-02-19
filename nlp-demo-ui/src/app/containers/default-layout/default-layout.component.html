@@ -1,0 +1,62 @@
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-sm-6">
+      <button (click)="setDemo('word')" class="btn btn-info demo-type">
+        Word Demo
+      </button>
+    </div>
+    <div class="col-sm-6">
+      <button (click)="setDemo('translate')" class="btn btn-info demo-type">
+        Translate Demo
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="demo === 'word'" class="mt-5">
+    <div class="row">
+      <button (click)="toggleLang()" class="btn btn-info toggle">
+        {{ lang }}
+      </button>
+      <input type="text" class="word-input ml-4 mr-4" [(ngModel)]="words" />
+      <button (click)="callWv()" class="btn btn-info toggle">
+        Go
+      </button>
+    </div>
+
+    <div *ngIf="error" class="error row mt-4">
+      <div class="col-sm-12">
+        {{ error }}
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div
+        *ngFor="let resWord of wordResp"
+        class="col-sm-4 word-res ml-2 mr-2 mt-3 mb-3"
+      >
+        <div>{{ resWord }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="demo === 'translate'">
+    <div class="row mt-5">
+      <div class="col-sm-4 center">
+        <div class="lang">{{ fisrtLang }}</div>
+      </div>
+      <div class="col-sm-4 center">
+        <button (click)="switchLang()" class="btn btn-info">Switch</button>
+      </div>
+      <div class="col-sm-4 center">
+        <div class="lang">{{ secondLang }}</div>
+      </div>
+    </div>
+
+    <div class="row mt-5">
+      <input type="text" class="word-single ml-4 mr-4" [(ngModel)]="words" />
+      <button (click)="callWv()" class="btn btn-info toggle">
+        Go
+      </button>
+    </div>
+  </div>
+</div>

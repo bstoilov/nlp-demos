@@ -1,0 +1,51 @@
+* {
+  transition: all ease 0.1s;
+}
+
+.demo-type {
+  font-size: 2rem;
+}
+
+.toggle {
+  font-size: 1.5rem;
+}
+.word-input {
+  width: 30rem;
+  font-size: 1.3rem;
+}
+
+.word-res {
+  font-size: 1.4rem;
+  font-weight: bolder;
+  background-color: rgba(0, 89, 255, 0.294);
+  text-align: center;
+}
+
+.word-res:hover {
+  transform: scale(1.05);
+}
+
+.error {
+  font-size: 1.5rem;
+  color: rgba(255, 0, 0, 0.603);
+  text-align: center;
+}
+
+.lang {
+  font-size: 1.2rem;
+  width: 100%;
+  height: 2rem;
+  font-weight: bolder;
+  text-align: center;
+  background-color: rgba(47, 139, 19, 0.294);
+}
+
+.center {
+  text-align: center;
+}
+
+.word-single {
+  width: 10rem;
+  font-size: 1.3rem;
+  text-align: center;
+}
