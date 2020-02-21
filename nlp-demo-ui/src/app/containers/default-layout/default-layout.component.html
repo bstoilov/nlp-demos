@@ -1,32 +1,28 @@
 <div class="container mt-5">
   <div class="row">
-    <div class="col-sm-6">
+    <div class="col-sm-4">
       <button (click)="setDemo('word')" class="btn btn-info demo-type">
         Word Demo
       </button>
     </div>
-    <div class="col-sm-6">
-      <button (click)="setDemo('translate')" class="btn btn-info demo-type">
-        Translate Demo
+    <div class="col-sm-4">
+      <button (click)="setDemo('clusters')" class="btn btn-info demo-type">
+        Clusters Demo
+      </button>
+    </div>
+    <div class="col-sm-4">
+      <button (click)="setDemo('similarity')" class="btn btn-info demo-type">
+        Similarity Demo
       </button>
     </div>
   </div>
 
   <div *ngIf="demo === 'word'" class="mt-5">
     <div class="row">
-      <button (click)="toggleLang()" class="btn btn-info toggle">
-        {{ lang }}
-      </button>
       <input type="text" class="word-input ml-4 mr-4" [(ngModel)]="words" />
       <button (click)="callWv()" class="btn btn-info toggle">
         Go
       </button>
-    </div>
-
-    <div *ngIf="error" class="error row mt-4">
-      <div class="col-sm-12">
-        {{ error }}
-      </div>
     </div>
 
     <div class="row mt-4">
@@ -39,24 +35,51 @@
     </div>
   </div>
 
-  <div *ngIf="demo === 'translate'">
+  <div *ngIf="demo === 'clusters'">
     <div class="row mt-5">
-      <div class="col-sm-4 center">
-        <div class="lang">{{ fisrtLang }}</div>
-      </div>
-      <div class="col-sm-4 center">
-        <button (click)="switchLang()" class="btn btn-info">Switch</button>
-      </div>
-      <div class="col-sm-4 center">
-        <div class="lang">{{ secondLang }}</div>
-      </div>
-    </div>
-
-    <div class="row mt-5">
-      <input type="text" class="word-single ml-4 mr-4" [(ngModel)]="words" />
-      <button (click)="callWv()" class="btn btn-info toggle">
+      <input type="text" class="word-input-big ml-4 mr-4" [(ngModel)]="group" />
+      <input
+        type="text"
+        class="word-input-big ml-4 mr-4 mt-1"
+        [(ngModel)]="url"
+      />
+      <button (click)="callClusters()" class="btn btn-info mt-2 toggle">
         Go
       </button>
+    </div>
+
+    <div class="row mt-4">
+      <div
+        *ngFor="let resWord of clusterRes"
+        class="col-sm-4 word-res ml-2 mr-2 mt-3 mb-3"
+      >
+        <div>{{ resWord }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="demo === 'similarity'">
+    <div class="row mt-4">
+      <input type="text" class="word-input-big ml-4 mr-4" [(ngModel)]="first" />
+      <input
+        type="text"
+        class="word-input-big ml-4 mr-4 mt-1"
+        [(ngModel)]="second"
+      />
+      <button (click)="callSimilarity()" class="btn btn-info mt-2 toggle">
+        Go
+      </button>
+    </div>
+    <div *ngIf="getSim()"class="row mt-3">
+      <div class="col-sm-12 word-res">
+        {{getSim()}}%
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="error" class="error row mt-4">
+    <div class="col-sm-12">
+      {{ error }}
     </div>
   </div>
 </div>

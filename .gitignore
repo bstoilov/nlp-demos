@@ -3,3 +3,4 @@ models/
 word-vectors/__pycache__/
 word-vectors/corpus_bg
 word-vectors/corpus_es
+mnist

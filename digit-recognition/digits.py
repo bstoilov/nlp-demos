@@ -7,14 +7,13 @@ from keras.models import load_model
 import os
 
 image_size = 28
-mnist_data_root = "/home/kashon/projects/Social-AI/tensorflow/data"
+mnist_data_root = "../mnist"
 model_home = "../models/"
 model_name = "digits"
 full_model_file = model_home + model_name
 
 if not os.path.exists(model_home):
     os.mkdir(model_home)
-
 
 
 def plot_numbers(first_n=5):
@@ -71,7 +70,6 @@ def train():
     model = Sequential()
     model.add(Dense(512, input_dim=image_size * image_size, activation='relu'))
     model.add(Dense(256, input_dim=512, activation='relu'))
-    model.add(Dense(128, input_dim=256, activation='relu'))
     model.add(Dense(10, activation='sigmoid'))
 
     model.compile(loss='binary_crossentropy',
@@ -98,21 +96,21 @@ def arr_to_num(arr):
 
 def test():
     test_data, expected_data = get_test_data()
-    print(full_model_file)
     model = load_model(full_model_file)
 
     test_data_array = np.array(test_data, "float32")
     predictions = model.predict(test_data_array).round()
 
-    print(len(test_data))
-
+    errors = 0
     for i in range(0, len(test_data)):
         predNum = arr_to_num(expected_data[i])  # expected number
         expt_num = arr_to_num(predictions[i])  # predicted number
         if predNum != expt_num:
+            errors += 1
             # print only when the network is wrong
-            print('Actual: ' + str(predNum) + " Expected: " + str(expt_num))
-            plot_pixels(test_data[i])
+            # print('Actual: ' + str(predNum) + " Expected: " + str(expt_num))
+            # plot_pixels(test_data[i])
+    print("total examples " + str(len(test_data)) + " errors " + str(errors))
 
 
 # train()
