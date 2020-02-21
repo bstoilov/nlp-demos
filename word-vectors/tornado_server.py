@@ -6,36 +6,35 @@ import logging
 import gensim.downloader as api
 from gensim.models import KeyedVectors, TranslationMatrix
 import numpy as np
+import requests
+import chardet
 
 vector_top_n = 10
 wv_es = '../models/wv_es/wv_es'
 wv_bg = '../models/wv_bg/wv_bg'
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
-word_pairs = [
-    ("едно", "one"), ("две", "two"), ("три", "three"), ("четири", "four"), ("пет", "five"),
-    ("шест", "six"), ("седем", "seven"),
-    ("куче", "dog"), ("риба", "fish"), ("птици", "birds"),
-    ("ябълка", "apple"), ("портокал", "orange"), ("грозде", "grape"), ("банан", "banana")
-]
+user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36'
 
 
 class WordVectorProcessor:
 
     def __init__(self):
-        self.word_vectors_en = api.load("glove-wiki-gigaword-100")
         self.word_vectors_bg = KeyedVectors.load(wv_bg, mmap='r')
-        self.translation_mat = TranslationMatrix(self.word_vectors_bg.wv, self.word_vectors_en.wv,
-                                                 word_pairs=word_pairs)
         self.word_vectors_bg.wv.most_similar(positive=['крал'], negative=[], topn=vector_top_n)
-        self.word_vectors_en.wv.most_similar(positive=['man'], negative=[], topn=vector_top_n)
         logging.info('Word vectors were loaded and initialized')
 
+        self.headers = {
+            'user-agent': user_agent,
+            'accept-encoding': 'gzip, deflate, br',
+            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+            'accept-language': 'en-US,en;q=0.9,bg;q=0.8'
+        }
+
     def wv_similar(self, body):
-        lang = body['lang']
         pos = body['positive']
         neg = body['negative']
-        vectors = self.get_vector_model(lang)
+        vectors = self.word_vectors_bg
         try:
             result = vectors.wv.most_similar(positive=pos, negative=neg, topn=vector_top_n)
         except Exception as e:
@@ -47,17 +46,22 @@ class WordVectorProcessor:
 
         return {'words': word_map}
 
-    def translate(self, body):
-        word = body['word']
+    def extract_same(self, body):
+        url = body['url']
+        group = body['group']
+        conetnts = self.download_page(url=url)
 
-        transl = self.translation_mat.translate([word])
-        print(transl)
-        return transl
+        
 
-    def get_vector_model(self, lang):
-        if lang == "en":
-            return self.word_vectors_en
-        return self.word_vectors_bg
+    def download_page(self, url):
+        response = requests.get(url, headers=self.headers)
+
+        if response.status_code == 200:
+            charset = chardet.detect(response.content)['encoding']
+            result_text = response.content.decode(charset)
+            return result_text
+
+        return ""
 
 
 port = 10001
@@ -82,7 +86,7 @@ class WvHandler(web.RequestHandler):
         self.write(response)
 
 
-class TranslateHandler(web.RequestHandler):
+class Kmeans(web.RequestHandler):
     def set_default_headers(self):
         self.set_header("Access-Control-Allow-Origin", "*")
         self.set_header("Access-Control-Allow-Headers", "x-requested-with")
