@@ -18,6 +18,7 @@ wath for dashes and dots, you will see errors in the python package anyway
 ### BG training data
 
 You can download my traning data, which is build using all books from chitanka.bg and several other smaller online resources.
+[Google dirve link](https://drive.google.com/file/d/10QJMtI1TvhjmlkoUtP78vwRwuPnlzI1J/view?usp=sharing)
 
 
        
